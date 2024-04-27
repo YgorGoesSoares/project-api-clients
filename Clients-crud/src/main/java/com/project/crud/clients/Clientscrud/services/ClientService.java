@@ -48,10 +48,13 @@ public class ClientService {
 
     @Transactional
     public ClientDTO insertClient(ClientDTO clientDTO) {
-        Client entity = new Client();
+        try {Client entity = new Client();
         copyDtoToEntity(clientDTO, entity);
         entity = repository.save(entity);
         return new ClientDTO(entity);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("CPF already exists");
+        }
     }
 
     public void deleteClient(Long id) {

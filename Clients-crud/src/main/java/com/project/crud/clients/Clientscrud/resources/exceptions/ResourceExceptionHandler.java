@@ -3,6 +3,7 @@ package com.project.crud.clients.Clientscrud.resources.exceptions;
 import com.project.crud.clients.Clientscrud.services.exceptions.DatabaseException;
 import com.project.crud.clients.Clientscrud.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
