@@ -4,9 +4,7 @@ import com.project.crud.clients.Clientscrud.dto.ClientDTO;
 import com.project.crud.clients.Clientscrud.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,6 +17,12 @@ public class ClientController {
 
     @Autowired
     private ClientService service;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
+        ClientDTO clientDTO = service.findById(id);
+        return ResponseEntity.ok().body(clientDTO);
+    }
 
     @GetMapping
     public ResponseEntity<Page<ClientDTO>> findAllPaged(Pageable pageable) {

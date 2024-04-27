@@ -9,7 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +25,13 @@ public class ClientService {
     public Page<ClientDTO> findAllPaged(Pageable pageable) {
         Page<Client> list = repository.findAll(pageable);
         return list.map(ClientDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public ClientDTO findById(Long id) {
+        Optional<Client> optionalEntity = repository.findById(id);
+        Client entity = optionalEntity.orElseThrow(() -> new ResourceNotFoundException("Id not found (" + id + ")"));
+        return new ClientDTO(entity);
     }
 
     @Transactional
