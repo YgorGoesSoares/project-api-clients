@@ -6,6 +6,8 @@ import com.project.crud.clients.Clientscrud.repository.ClientRepository;
 import com.project.crud.clients.Clientscrud.services.exceptions.DatabaseException;
 import com.project.crud.clients.Clientscrud.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -36,6 +38,12 @@ public class ClientService {
 
     @Transactional
     public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
+
+        Optional<Client> clientOptional = repository.findByCpf(clientDTO.getCpf());
+        if (clientOptional.isPresent()) {
+            throw new DatabaseException("CPF already exists on database.");
+        }
+
         try{
             Client entity = repository.getReferenceById(id);
             copyDtoToEntity(clientDTO, entity);
@@ -54,6 +62,8 @@ public class ClientService {
         return new ClientDTO(entity);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("CPF already exists");
+        } catch (ConstraintViolationException e) {
+            throw new DatabaseException("Check the data and try again. Log:" + e.getConstraintViolations());
         }
     }
 
